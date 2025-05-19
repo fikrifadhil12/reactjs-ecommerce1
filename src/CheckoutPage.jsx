@@ -22,6 +22,7 @@ const CheckoutPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [orderId, setOrderId] = useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
