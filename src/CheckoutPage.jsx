@@ -69,7 +69,7 @@ const CheckoutPage = () => {
     if (!token) {
       throw new Error("Token autentikasi tidak ditemukan");
     }
-
+    console.log("BASE_URL:", BASE_URL);
     console.log("Full API URL:", `${API_URL}/checkout`);
     console.log("Token:", token);
     console.log("Request payload:", {
