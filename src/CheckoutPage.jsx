@@ -59,59 +59,55 @@ const CheckoutPage = () => {
   };
 
   const handleCheckout = async () => {
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    setIsProcessing(true);
+  setIsProcessing(true);
 
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Token autentikasi tidak ditemukan");
-      }
-
-      const response = await fetch(`${API_URL}/checkoutPage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...formData,
-          paymentMethod,
-          cartItems,
-          totalAmount: subtotal,
-        }),
-      });
-
-      const text = await response.text();
-      let data;
-
-      try {
-        data = JSON.parse(text);
-      } catch (jsonError) {
-        console.error("❌ JSON parse error:", jsonError.message);
-        throw new Error(`Respon server tidak valid: ${text}`);
-      }
-
-      if (!response.ok) {
-        throw new Error(data.message || `Gagal checkout: ${response.status}`);
-      }
-
-      console.log("✅ Checkout success:", data);
-      setOrderId(data.orderId);
-      setShowSuccessPopup(true);
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 3000);
-    } catch (error) {
-      console.error("Checkout error:", error.message);
-      setErrors({
-        general: error.message || "Terjadi kesalahan. Silakan coba lagi.",
-      });
-    } finally {
-      setIsProcessing(false);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token autentikasi tidak ditemukan");
     }
-  };
+
+    console.log("Sending to:", `${API_URL}/checkout`); // Debug URL
+    const response = await fetch(`${API_URL}/checkout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        ...formData,
+        paymentMethod,
+        cartItems,
+        totalAmount: subtotal,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(
+        errorData?.message || 
+        `Server returned ${response.status}: ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+    console.log("Checkout success:", data);
+    setOrderId(data.orderId);
+    setShowSuccessPopup(true);
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 3000);
+  } catch (error) {
+    console.error("Checkout error:", error);
+    setErrors({
+      general: error.message || "Terjadi kesalahan. Silakan coba lagi.",
+    });
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
