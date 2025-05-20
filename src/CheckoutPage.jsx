@@ -65,11 +65,12 @@ const CheckoutPage = () => {
 
   try {
     const token = localStorage.getItem("token");
+    console.log("Token yang dikirim:", token);
     if (!token) {
       throw new Error("Token autentikasi tidak ditemukan");
     }
 
-    console.log("Sending to:", `${API_URL}/checkout`); // Debug URL
+    console.log("Request URL:", `${API_URL}/checkout`); 
     const response = await fetch(`${API_URL}/checkout`, {
       method: "POST",
       headers: {
