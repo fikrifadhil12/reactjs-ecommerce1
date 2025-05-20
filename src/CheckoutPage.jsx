@@ -69,7 +69,7 @@ const CheckoutPage = () => {
         throw new Error("Token autentikasi tidak ditemukan");
       }
 
-      const response = await fetch(`${API_URL}/checkout`, {
+      const response = await fetch(`${API_URL}/checkoutPage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
