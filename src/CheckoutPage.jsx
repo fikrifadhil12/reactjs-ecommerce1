@@ -70,7 +70,14 @@ const CheckoutPage = () => {
       throw new Error("Token autentikasi tidak ditemukan");
     }
 
-    console.log("Request URL:", `${API_URL}/checkout`); 
+    console.log("Full API URL:", `${API_URL}/checkout`);
+    console.log("Token:", token);
+    console.log("Request payload:", {
+      ...formData,
+      paymentMethod,
+      cartItems,
+      totalAmount: subtotal
+    }); 
     const response = await fetch(`${API_URL}/checkout`, {
       method: "POST",
       headers: {
