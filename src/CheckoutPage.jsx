@@ -59,86 +59,59 @@ const CheckoutPage = () => {
   };
 
   const handleCheckout = async () => {
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  setIsProcessing(true);
-
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      throw new Error("No authentication token found");
-    }
+    setIsProcessing(true);
 
     try {
-  const response = await fetch(`${API_URL}/checkout`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      name,
-      email,
-      address,
-      city,
-      postalCode,
-      phone,
-      paymentMethod,
-      cartItems,
-      totalAmount,
-    }),
-  });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token autentikasi tidak ditemukan");
+      }
 
-  const text = await response.text(); // baca dulu sebagai teks
-  let data;
+      const response = await fetch(`${API_URL}/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ...formData,
+          paymentMethod,
+          cartItems,
+          totalAmount: subtotal,
+        }),
+      });
 
-  try {
-    data = JSON.parse(text); // coba parse ke JSON
-  } catch (jsonError) {
-    console.error("❌ JSON parse error:", jsonError.message);
-    throw new Error(`Server returned non-JSON response: ${text}`);
-  }
-
-  if (!response.ok) {
-    throw new Error(data.message || `Checkout failed with status ${response.status}`);
-  }
-
-  // ✅ Berhasil
-  console.log("✅ Checkout success:", data);
-  alert(`Pesanan berhasil disimpan dengan ID: ${data.orderId}`);
-} catch (err) {
-  console.error("Checkout error:", err.message);
-  alert(`Checkout gagal: ${err.message}`);
-}
-
-
-    let data;
-    try {
-      data = await response.json(); // Coba parse sebagai JSON
-    } catch (jsonError) {
-      // Jika gagal parse JSON, baca sebagai text
       const text = await response.text();
-      throw new Error(`Server returned non-JSON response: ${text}`);
-    }
+      let data;
 
-    if (!response.ok) {
-      throw new Error(data.message || `Checkout failed with status ${response.status}`);
-    }
+      try {
+        data = JSON.parse(text);
+      } catch (jsonError) {
+        console.error("❌ JSON parse error:", jsonError.message);
+        throw new Error(`Respon server tidak valid: ${text}`);
+      }
 
-    setOrderId(data.orderId);
-    setShowSuccessPopup(true);
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 3000);
-  } catch (error) {
-    console.error("Checkout error:", error);
-    setErrors({
-      general: error.message || "Terjadi kesalahan. Silakan coba lagi.",
-    });
-  } finally {
-    setIsProcessing(false);
-  }
-};
+      if (!response.ok) {
+        throw new Error(data.message || `Gagal checkout: ${response.status}`);
+      }
+
+      console.log("✅ Checkout success:", data);
+      setOrderId(data.orderId);
+      setShowSuccessPopup(true);
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 3000);
+    } catch (error) {
+      console.error("Checkout error:", error.message);
+      setErrors({
+        general: error.message || "Terjadi kesalahan. Silakan coba lagi.",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
