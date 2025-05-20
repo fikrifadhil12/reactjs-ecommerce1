@@ -16,6 +16,8 @@ const App = () => {
   );
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
     const checkToken = async () => {
