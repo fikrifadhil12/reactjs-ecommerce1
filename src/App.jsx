@@ -16,8 +16,12 @@ const App = () => {
   );
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
-  const API_URL = process.env.REACT_APP_API_URL;
+  
+  // Pastikan nama environment variable ini sesuai dengan .env Anda
+  const API_URL = process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
 
+  // Debug: Cetak API_URL untuk memastikan nilainya benar
+  console.log("API_URL:", API_URL);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -33,6 +37,11 @@ const App = () => {
       }
 
       try {
+        // Tambahkan error handling untuk URL yang tidak valid
+        if (!API_URL) {
+          throw new Error("REACT_APP_API_URL tidak terdefinisi");
+        }
+
         const response = await fetch(`${API_URL}/verify-token`, {
           method: "GET",
           headers: {
@@ -40,10 +49,15 @@ const App = () => {
           },
         });
 
+        // Tambahkan pengecekan response network error
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         console.log("Response dari backend:", data);
 
-        if (response.ok && data.valid) {
+        if (data.valid) {
           console.log("Token valid, user terautentikasi.");
           setIsAuthenticated(true);
           localStorage.setItem("isAuthenticated", "true");
@@ -54,7 +68,7 @@ const App = () => {
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error("Error verifying token:", error);
+        console.error("Error verifying token:", error.message);
         localStorage.removeItem("token");
         localStorage.removeItem("isAuthenticated");
         setIsAuthenticated(false);
@@ -64,7 +78,7 @@ const App = () => {
     };
 
     checkToken();
-  }, []);
+  }, [API_URL]); // Tambahkan API_URL sebagai dependency
 
   if (loading) {
     return <div className="text-center mt-10">Checking authentication...</div>;
@@ -74,7 +88,6 @@ const App = () => {
     <Router>
       <div className="container mx-auto p-4">
         <Routes>
-          {/* Redirect ke dashboard setelah login */}
           <Route
             path="/"
             element={
@@ -87,15 +100,22 @@ const App = () => {
           />
           <Route
             path="/login"
-            element={<Login setIsAuthenticated={setIsAuthenticated} />}
+            element={<Login setIsAuthenticated={setIsAuthenticated} API_URL={API_URL} />}
           />
-          <Route path="/register" element={<Register />} />
+          <Route 
+            path="/register" 
+            element={<Register API_URL={API_URL} />} 
+          />
 
           <Route
             path="/dashboard"
             element={
               isAuthenticated ? (
-                <Dashboard cartItems={cartItems} setCartItems={setCartItems} />
+                <Dashboard 
+                  cartItems={cartItems} 
+                  setCartItems={setCartItems} 
+                  API_URL={API_URL}
+                />
               ) : (
                 <Navigate to="/login" />
               )
@@ -106,7 +126,10 @@ const App = () => {
             path="/checkout"
             element={
               isAuthenticated ? (
-                <CheckoutPage cartItems={cartItems} />
+                <CheckoutPage 
+                  cartItems={cartItems} 
+                  API_URL={API_URL} 
+                />
               ) : (
                 <Navigate to="/login" />
               )
