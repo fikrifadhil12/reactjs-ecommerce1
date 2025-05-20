@@ -59,56 +59,57 @@ const CheckoutPage = () => {
   };
 
   const handleCheckout = async () => {
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    setIsProcessing(true);
+  setIsProcessing(true);
 
-    try {
-      // Get token from localStorage
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
-
-      const response = await fetch(`${API_URL}/checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...formData,
-          paymentMethod,
-          cartItems,
-          totalAmount: subtotal,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Checkout failed");
-      }
-
-      // Save the order ID for display
-      setOrderId(data.orderId);
-
-      // Show success popup
-      setShowSuccessPopup(true);
-
-      // Redirect after 3 seconds
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 3000);
-    } catch (error) {
-      console.error("Checkout error:", error);
-      setErrors({
-        general: error.message || "Terjadi kesalahan. Silakan coba lagi.",
-      });
-    } finally {
-      setIsProcessing(false);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No authentication token found");
     }
-  };
+
+    const response = await fetch(`${API_URL}/checkout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        ...formData,
+        paymentMethod,
+        cartItems,
+        totalAmount: subtotal,
+      }),
+    });
+
+    let data;
+    try {
+      data = await response.json(); // Coba parse sebagai JSON
+    } catch (jsonError) {
+      // Jika gagal parse JSON, baca sebagai text
+      const text = await response.text();
+      throw new Error(`Server returned non-JSON response: ${text}`);
+    }
+
+    if (!response.ok) {
+      throw new Error(data.message || `Checkout failed with status ${response.status}`);
+    }
+
+    setOrderId(data.orderId);
+    setShowSuccessPopup(true);
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 3000);
+  } catch (error) {
+    console.error("Checkout error:", error);
+    setErrors({
+      general: error.message || "Terjadi kesalahan. Silakan coba lagi.",
+    });
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
