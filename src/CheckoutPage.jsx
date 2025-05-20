@@ -22,7 +22,7 @@ const CheckoutPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [orderId, setOrderId] = useState(null);
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -69,7 +69,10 @@ const CheckoutPage = () => {
     if (!token) {
       throw new Error("Token autentikasi tidak ditemukan");
     }
-   
+   console.log("Full API URL:", `${API_URL}/checkout`);
+    if (!API_URL) {
+      throw new Error("API URL is not defined");
+    }
     console.log("Full API URL:", `${API_URL}/checkout`);
     console.log("Token:", token);
     console.log("Request payload:", {
