@@ -69,19 +69,48 @@ const CheckoutPage = () => {
       throw new Error("No authentication token found");
     }
 
-    const response = await fetch(`${API_URL}/checkout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        ...formData,
-        paymentMethod,
-        cartItems,
-        totalAmount: subtotal,
-      }),
-    });
+    try {
+  const response = await fetch(`${API_URL}/checkout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      address,
+      city,
+      postalCode,
+      phone,
+      paymentMethod,
+      cartItems,
+      totalAmount,
+    }),
+  });
+
+  const text = await response.text(); // baca dulu sebagai teks
+  let data;
+
+  try {
+    data = JSON.parse(text); // coba parse ke JSON
+  } catch (jsonError) {
+    console.error("❌ JSON parse error:", jsonError.message);
+    throw new Error(`Server returned non-JSON response: ${text}`);
+  }
+
+  if (!response.ok) {
+    throw new Error(data.message || `Checkout failed with status ${response.status}`);
+  }
+
+  // ✅ Berhasil
+  console.log("✅ Checkout success:", data);
+  alert(`Pesanan berhasil disimpan dengan ID: ${data.orderId}`);
+} catch (err) {
+  console.error("Checkout error:", err.message);
+  alert(`Checkout gagal: ${err.message}`);
+}
+
 
     let data;
     try {
