@@ -63,13 +63,24 @@ const CheckoutPage = () => {
     setIsProcessing(true);
 
     try {
-      // Get token from localStorage
       const token = localStorage.getItem("token");
+      console.log("Token yang dikirim:", token);
       if (!token) {
-        throw new Error("No authentication token found");
+        throw new Error("Token autentikasi tidak ditemukan");
       }
-
-      const response = await fetch(`${API_URL}/checkout`, {
+      // console.log("Full API URL:", `${API_URL}/checkout`);
+      if (!API_URL) {
+        throw new Error("API URL is not defined");
+      }
+      // console.log("Full API URL:", `${API_URL}/checkout`);
+      console.log("Token:", token);
+      console.log("Request payload:", {
+        ...formData,
+        paymentMethod,
+        cartItems,
+        totalAmount: subtotal,
+      });
+      const response = fetch("http://localhost:5000/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,19 +94,18 @@ const CheckoutPage = () => {
         }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || "Checkout failed");
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.message ||
+            `Server returned ${response.status}: ${response.statusText}`
+        );
       }
 
-      // Save the order ID for display
+      const data = await response.json();
+      console.log("Checkout success:", data);
       setOrderId(data.orderId);
-
-      // Show success popup
       setShowSuccessPopup(true);
-
-      // Redirect after 3 seconds
       setTimeout(() => {
         navigate("/dashboard");
       }, 3000);

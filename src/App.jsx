@@ -9,6 +9,7 @@ import Login from "./Login";
 import Register from "./Register";
 import Dashboard from "./Dashboard";
 import CheckoutPage from "./CheckoutPage";
+import SearchPage from "./SearchPage";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -31,7 +32,7 @@ const App = () => {
       }
 
       try {
-        const response = await fetch(`${API_URL}/verify-token`, {
+        const response = await fetch("http://localhost:5000/verify-token", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -108,6 +109,14 @@ const App = () => {
               ) : (
                 <Navigate to="/login" />
               )
+            }
+          />
+
+          {/* Tambahkan route untuk search di sini */}
+          <Route
+            path="/search"
+            element={
+              isAuthenticated ? <SearchPage /> : <Navigate to="/login" />
             }
           />
         </Routes>

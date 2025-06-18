@@ -20,8 +20,6 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [notification, setNotification] = useState({ message: "", type: "" });
   const navigate = useNavigate();
-  const API_URL =
-    process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
 
   const handleRegister = async () => {
     if (!name || !email || !phone || !password || !confirmPassword) {
@@ -53,7 +51,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/register`, {
+      const response = await fetch("http://localhost:5000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, phone, password }),
@@ -94,7 +92,7 @@ const Register = () => {
               Create your account
             </h1>
             <p className="text-gray-600">
-              Join UTech and unlock amazing features
+              Join X-Mart and unlock amazing features
             </p>
           </div>
 
@@ -250,17 +248,103 @@ const Register = () => {
         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div className="relative h-full flex flex-col items-center justify-center p-12 text-white">
           <div className="max-w-lg mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Welcome to UTech</h2>
-            <p className="text-lg mb-8 opacity-90">
-              Join our community and experience the best in technology
-              solutions.
+            <h2 className="text-4xl font-bold mb-4">
+              Join Our Shopping Community
+            </h2>
+            <p className="text-xl mb-8 opacity-90">
+              Create your account and enjoy these benefits:
             </p>
-            <div className="relative w-full h-64">
+            <ul className="text-left mb-8 space-y-2 text-lg">
+              <li className="flex items-center">
+                <svg
+                  className="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Exclusive member discounts
+              </li>
+              <li className="flex items-center">
+                <svg
+                  className="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Faster checkout process
+              </li>
+              <li className="flex items-center">
+                <svg
+                  className="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Personalized recommendations
+              </li>
+              <li className="flex items-center">
+                <svg
+                  className="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Order tracking history
+              </li>
+            </ul>
+            <div className="relative w-full h-80">
+              {/* Opsi 1: Ilustrasi pendaftaran e-commerce */}
               <img
-                src="https://cdn.pixabay.com/photo/2021/01/21/15/54/tech-5937719_1280.png"
+                src="https://illustrations.popsy.co/amber/online-shopping.svg"
                 alt="Register Illustration"
                 className="absolute inset-0 w-full h-full object-contain"
               />
+
+              {/* Opsi 2: Ilustrasi belanja online */}
+              {/*
+        <img
+          src="https://illustrations.popsy.co/amber/online-shopping.svg"
+          alt="Online Shopping"
+          className="absolute inset-0 w-full h-full object-contain"
+        />
+        */}
+
+              {/* Opsi 3: Ilustrasi welcome gift */}
+              {/*
+        <img
+          src="https://illustrations.popsy.co/amber/gift-box.svg"
+          alt="Welcome Gift"
+          className="absolute inset-0 w-full h-full object-contain"
+        />
+        */}
             </div>
           </div>
         </div>

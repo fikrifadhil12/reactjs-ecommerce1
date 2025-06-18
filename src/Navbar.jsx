@@ -50,7 +50,7 @@ const Navbar = ({
           onClick={() => navigate("/")}
         >
           <FiHome className="text-purple-600 mr-2" size={20} />
-          <span className="text-xl font-bold text-gray-800">UTech</span>
+          <span className="text-xl font-bold text-gray-800">X-Mart</span>
         </div>
 
         {/* Search Bar - Hidden on Mobile */}
