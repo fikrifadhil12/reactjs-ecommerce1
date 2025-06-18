@@ -9,6 +9,7 @@ import Login from "./Login";
 import Register from "./Register";
 import Dashboard from "./Dashboard";
 import CheckoutPage from "./CheckoutPage";
+import SearchPage from "./SearchPage";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -16,12 +17,6 @@ const App = () => {
   );
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
-  
-  // Pastikan nama environment variable ini sesuai dengan .env Anda
-  const API_URL = process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
-
-  // Debug: Cetak API_URL untuk memastikan nilainya benar
-  console.log("API_URL:", API_URL);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -37,27 +32,17 @@ const App = () => {
       }
 
       try {
-        // Tambahkan error handling untuk URL yang tidak valid
-        if (!API_URL) {
-          throw new Error("REACT_APP_API_URL tidak terdefinisi");
-        }
-
-        const response = await fetch(`${API_URL}/verify-token`, {
+        const response = await fetch("http://localhost:5000/verify-token", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        // Tambahkan pengecekan response network error
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const data = await response.json();
         console.log("Response dari backend:", data);
 
-        if (data.valid) {
+        if (response.ok && data.valid) {
           console.log("Token valid, user terautentikasi.");
           setIsAuthenticated(true);
           localStorage.setItem("isAuthenticated", "true");
@@ -68,7 +53,7 @@ const App = () => {
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error("Error verifying token:", error.message);
+        console.error("Error verifying token:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("isAuthenticated");
         setIsAuthenticated(false);
@@ -78,7 +63,7 @@ const App = () => {
     };
 
     checkToken();
-  }, [API_URL]); // Tambahkan API_URL sebagai dependency
+  }, []);
 
   if (loading) {
     return <div className="text-center mt-10">Checking authentication...</div>;
@@ -88,6 +73,7 @@ const App = () => {
     <Router>
       <div className="container mx-auto p-4">
         <Routes>
+          {/* Redirect ke dashboard setelah login */}
           <Route
             path="/"
             element={
@@ -100,22 +86,15 @@ const App = () => {
           />
           <Route
             path="/login"
-            element={<Login setIsAuthenticated={setIsAuthenticated} API_URL={API_URL} />}
+            element={<Login setIsAuthenticated={setIsAuthenticated} />}
           />
-          <Route 
-            path="/register" 
-            element={<Register API_URL={API_URL} />} 
-          />
+          <Route path="/register" element={<Register />} />
 
           <Route
             path="/dashboard"
             element={
               isAuthenticated ? (
-                <Dashboard 
-                  cartItems={cartItems} 
-                  setCartItems={setCartItems} 
-                  API_URL={API_URL}
-                />
+                <Dashboard cartItems={cartItems} setCartItems={setCartItems} />
               ) : (
                 <Navigate to="/login" />
               )
@@ -126,13 +105,18 @@ const App = () => {
             path="/checkout"
             element={
               isAuthenticated ? (
-                <CheckoutPage 
-                  cartItems={cartItems} 
-                  API_URL={API_URL} 
-                />
+                <CheckoutPage cartItems={cartItems} />
               ) : (
                 <Navigate to="/login" />
               )
+            }
+          />
+
+          {/* Tambahkan route untuk search di sini */}
+          <Route
+            path="/search"
+            element={
+              isAuthenticated ? <SearchPage /> : <Navigate to="/login" />
             }
           />
         </Routes>
