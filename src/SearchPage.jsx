@@ -1,4 +1,3 @@
-// src/SearchPage.js
 import { useLocation } from "react-router-dom";
 
 const SearchPage = () => {
@@ -10,7 +9,7 @@ const SearchPage = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Search Results</h1>
       <div className="p-4 border rounded bg-gray-50">
-        <p>Search query: {query}</p>
+        <p dangerouslySetInnerHTML={{ __html: `Search query: ${query}` }} />
         <p className="mt-2 text-sm text-gray-600">
           Hasil pencarian akan ditampilkan di sini
         </p>
