@@ -10,10 +10,7 @@ import Register from "./Register";
 import Dashboard from "./Dashboard";
 import CheckoutPage from "./CheckoutPage";
 import SearchPage from "./SearchPage";
-<<<<<<< HEAD
 import ProfilePage from "./ProfilePage";
-=======
->>>>>>> 93af84424f8c11467c1df9291456617cc8dd59b3
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -124,7 +121,6 @@ const App = () => {
             }
           />
 
-
           <Route
             path="/profile"
             element={
@@ -135,7 +131,6 @@ const App = () => {
               )
             }
           />
-
         </Routes>
       </div>
     </Router>

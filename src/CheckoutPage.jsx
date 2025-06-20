@@ -60,41 +60,10 @@ const CheckoutPage = () => {
   };
 
   const handleCheckout = async () => {
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  setIsProcessing(true);
+    setIsProcessing(true);
 
-  try {
-    const token = localStorage.getItem("token");
-    console.log("Token yang dikirim:", token);
-    if (!token) {
-      throw new Error("Token autentikasi tidak ditemukan");
-    }
-   console.log("Full API URL:", `${API_URL}/checkout`);
-    if (!API_URL) {
-      throw new Error("API URL is not defined");
-    }
-    console.log("Full API URL:", `${API_URL}/checkout`);
-    console.log("Token:", token);
-    console.log("Request payload:", {
-      ...formData,
-      paymentMethod,
-      cartItems,
-      totalAmount: subtotal
-    }); 
-    const response = await fetch(`${API_URL}/checkout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        ...formData,
-        paymentMethod,
-        cartItems,
-        totalAmount: subtotal,
-      }),
-    });
     try {
       const token = localStorage.getItem("token");
       console.log("Token yang dikirim:", token);
