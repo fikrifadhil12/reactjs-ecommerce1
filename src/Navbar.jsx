@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { FiSearch, FiShoppingCart, FiMenu, FiX, FiHome } from "react-icons/fi";
+import {
+  FiSearch,
+  FiShoppingCart,
+  FiMenu,
+  FiX,
+  FiHome,
+  FiUser,
+} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
@@ -12,14 +19,6 @@ const Navbar = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    const isConfirmed = window.confirm("Apakah Anda yakin ingin keluar?");
-    if (isConfirmed) {
-      localStorage.removeItem("token");
-      navigate("/login");
-    }
-  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -67,8 +66,17 @@ const Navbar = ({
           </div>
         </form>
 
-        {/* Right Menu: Cart and Logout */}
+        {/* Right Menu: Cart and Profile */}
         <div className="flex items-center space-x-4">
+          {/* Profile Button */}
+          <button
+            onClick={() => navigate("/profile")}
+            className="p-2 rounded-full hover:bg-gray-100"
+            title="Profile"
+          >
+            <FiUser size={20} className="text-gray-700" />
+          </button>
+
           {/* Cart Button */}
           <div className="relative">
             <button
@@ -84,14 +92,6 @@ const Navbar = ({
               )}
             </button>
           </div>
-
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            className=" text-purple-600 hover:text-red-600 hover:bg-white active:text-purple-600 active:bg-white active:scale-95 px-2 py-1 rounded-md transition"
-          >
-            Logout
-          </button>
         </div>
       </div>
     </nav>

@@ -10,6 +10,7 @@ import Register from "./Register";
 import Dashboard from "./Dashboard";
 import CheckoutPage from "./CheckoutPage";
 import SearchPage from "./SearchPage";
+import ProfilePage from "./ProfilePage";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -117,6 +118,17 @@ const App = () => {
             path="/search"
             element={
               isAuthenticated ? <SearchPage /> : <Navigate to="/login" />
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              isAuthenticated ? (
+                <ProfilePage setIsAuthenticated={setIsAuthenticated} />
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
         </Routes>
