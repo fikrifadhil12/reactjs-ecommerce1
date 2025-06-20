@@ -12,11 +12,13 @@ const Dashboard = () => {
   const [sortOption, setSortOption] = useState("recommended");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cartIconRef = useRef(null);
+  const API_URL =
+    process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/products");
+        const response = await fetch(`${API_URL}/products`);
         const data = await response.json();
         setProducts(data);
         setIsLoading(false);

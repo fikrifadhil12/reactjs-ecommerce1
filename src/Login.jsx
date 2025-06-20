@@ -9,12 +9,13 @@ const Login = ({ setIsAuthenticated }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
+  const API_URL =
+    process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoading(true);
-      fetch("http://localhost:5000/verify-token", {
+      fetch(`${API_URL}/verify-token`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -44,7 +45,7 @@ const Login = ({ setIsAuthenticated }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -322,14 +323,17 @@ const Login = ({ setIsAuthenticated }) => {
         <div className="w-full h-full flex items-center justify-center p-12">
           <div className="text-center max-w-2xl">
             <img
-              src="https://illustrations.popsy.co/amber/online-shopping.svg"
+              src="https://illustrations.popsy.co/amber/student-graduation.svg"
               alt="Login Illustration"
               className="w-full h-auto max-h-96 mx-auto mb-8"
             />
             <h2 className="text-3xl font-bold text-white mb-4">
-              Welcome to x-mart
+              Welcome to UTech
             </h2>
-            <p className="text-lg text-blue-100">you can find anything here</p>
+            <p className="text-lg text-blue-100">
+              Your gateway to innovative technology solutions and learning
+              resources.
+            </p>
           </div>
         </div>
       </div>
