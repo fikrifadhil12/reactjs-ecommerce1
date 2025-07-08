@@ -66,7 +66,7 @@ const Login = ({ setIsAuthenticated }) => {
           if (role === "admin") {
             window.location.href = "https://admin-ecommerce-livid.vercel.app";
           } else if (role === "delivery") {
-            window.location.href = "https://delivery-ecommerce.vercel.app";
+            window.location.href = "https://delivery-six-vert.vercel.app";
           } else {
             navigate("/dashboard");
           }
