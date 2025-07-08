@@ -3,8 +3,7 @@ import ProductCard from "./ProductCard";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const API_URL =
-    process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
+  const API_URL = "https://backend-ecommerce-production-3e78.up.railway.app";
 
   useEffect(() => {
     fetch(`${API_URL}/products`)
