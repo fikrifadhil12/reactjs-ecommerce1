@@ -12,8 +12,7 @@ const Dashboard = () => {
   const [sortOption, setSortOption] = useState("recommended");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cartIconRef = useRef(null);
-  const API_URL =
-    process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
+  const API_URL = "https://backend-ecommerce-production-3e78.up.railway.app";
 
   useEffect(() => {
     const fetchProducts = async () => {
