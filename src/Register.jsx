@@ -20,8 +20,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [notification, setNotification] = useState({ message: "", type: "" });
   const navigate = useNavigate();
-  const API_URL =
-    process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
+  const API_URL = "https://backend-ecommerce-production-3e78.up.railway.app";
 
   const handleRegister = async () => {
     if (!name || !email || !phone || !password || !confirmPassword) {
