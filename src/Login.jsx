@@ -60,7 +60,18 @@ const Login = ({ setIsAuthenticated }) => {
         localStorage.setItem("isAuthenticated", "true");
         setIsAuthenticated(true);
         setNotification({ message: "Login successful!", type: "success" });
-        setTimeout(() => navigate("/dashboard"), 1500);
+
+        // 🔁 Redirect sesuai role
+        setTimeout(() => {
+          const role = data.user.role;
+          if (role === "admin") {
+            window.location.href = "https://admin-ecommerce-livid.vercel.app";
+          } else if (role === "delivery") {
+            window.location.href = "https://delivery-ecommerce.vercel.app";
+          } else {
+            navigate("/dashboard");
+          }
+        }, 1500);
       } else {
         setNotification({
           message: data.message || "Login failed!",
