@@ -9,8 +9,7 @@ const Login = ({ setIsAuthenticated }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const API_URL =
-    process.env.REACT_APP_API_URL || "https://private-extreme-town.glitch.me";
+  const API_URL = "https://backend-ecommerce-production-3e78.up.railway.app";
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
